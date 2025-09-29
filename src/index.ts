@@ -15,6 +15,8 @@ app.get("/:mins{[0-9]+}/:name/:version?", async (c) => {
 
   const pkgInfo = await registry.getPackage(params.name);
 
+  let latestVersion: string | undefined;
+  let latestDate: Date | undefined;
   const excludeKeys = ["created", "modified"];
   for (let k in pkgInfo.time) {
     if (excludeKeys.includes(k)) {
@@ -26,6 +28,11 @@ app.get("/:mins{[0-9]+}/:name/:version?", async (c) => {
       delete pkgInfo.versions[k];
       delete pkgInfo.time[k];
       console.log("removed version:", k, pkgDate.toISOString());
+    } else {
+      if (!latestDate || pkgDate > latestDate) {
+        latestDate = pkgDate;
+        latestVersion = k;
+      }
     }
   }
 
@@ -33,8 +40,9 @@ app.get("/:mins{[0-9]+}/:name/:version?", async (c) => {
     return c.json(pkgInfo);
   }
 
-  if (params.version in pkgInfo.versions) {
-    const pkg = await registry.getPackageVersion(params.name, params.version);
+  const version = params.version === "latest" ? latestVersion : params.version;
+  if (version && version in pkgInfo.versions) {
+    const pkg = await registry.getPackageVersion(params.name, version);
     return c.json(pkg);
   }
 
