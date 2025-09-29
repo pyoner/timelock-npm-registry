@@ -10,8 +10,8 @@ app.get("/:mins{[0-9]+}/:name/:version?", async (c) => {
   const params = c.req.param();
 
   const mins = parseInt(params.mins) * 60_000;
-  const date = new Date(Date.now() - mins);
-  console.log(date);
+  const lockDate = new Date(Date.now() - mins);
+  console.log(lockDate);
 
   const pkgInfo = await registry.getPackage(params.name);
 
@@ -22,7 +22,7 @@ app.get("/:mins{[0-9]+}/:name/:version?", async (c) => {
     }
 
     const pkgDate = new Date(pkgInfo.time[k]);
-    if (pkgDate > date) {
+    if (pkgDate > lockDate) {
       delete pkgInfo.versions[k];
       delete pkgInfo.time[k];
       console.log("removed version:", k, pkgDate.toISOString());
