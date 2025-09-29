@@ -6,7 +6,7 @@ const registry = new NpmRegistry();
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
-app.get("/:mins{[0-9]+}/:name/:version?", async (c) => {
+app.get("/lock/:mins{[0-9]+}/:name/:version?", async (c) => {
   const params = c.req.param();
 
   const mins = parseInt(params.mins) * 60_000;
