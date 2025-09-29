@@ -29,7 +29,16 @@ app.get("/:mins{[0-9]+}/:name/:version?", async (c) => {
     }
   }
 
-  return c.json(pkgInfo);
+  if (!params.version) {
+    return c.json(pkgInfo);
+  }
+
+  if (params.version in pkgInfo.versions) {
+    const pkg = await registry.getPackageVersion(params.name, params.version);
+    return c.json(pkg);
+  }
+
+  return c.json({}, 404);
 });
 
 export default app;
