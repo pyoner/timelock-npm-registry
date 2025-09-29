@@ -62,12 +62,6 @@ For `bun`, configure the registry in your `bunfig.toml` file:
 registry = "https://timelock-npm-registry.dev/lock/1440/"
 ```
 
-Alternatively, you can set the registry for a single command using an environment variable:
-
-```bash
-BUN_INSTALL_REGISTRY="https://timelock-npm-registry.dev/lock/1440/" bun install
-```
-
 ## Who benefits
 
 - Developers who want to minimize supply chain attack risks.
