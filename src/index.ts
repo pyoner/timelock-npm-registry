@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { NpmRegistry, PackageInfo } from "npm-registry-sdk";
+import { NpmRegistry } from "npm-registry-sdk";
 
 // Use default registry URLs
 const registry = new NpmRegistry();
@@ -11,29 +11,37 @@ app.get("/:mins{[0-9]+}/:name/:version?", async (c) => {
 
   const mins = parseInt(params.mins) * 60_000;
   const lockDate = new Date(Date.now() - mins);
-  console.log(lockDate);
 
   const pkgInfo = await registry.getPackage(params.name);
+  const distTags = pkgInfo["dist-tags"];
 
   let latestVersion: string | undefined;
   let latestDate: Date | undefined;
   const excludeKeys = ["created", "modified"];
-  for (let k in pkgInfo.time) {
-    if (excludeKeys.includes(k)) {
+  for (let pkgVersion in pkgInfo.time) {
+    if (excludeKeys.includes(pkgVersion)) {
       continue;
     }
 
-    const pkgDate = new Date(pkgInfo.time[k]);
+    const pkgDate = new Date(pkgInfo.time[pkgVersion]);
     if (pkgDate > lockDate) {
-      delete pkgInfo.versions[k];
-      delete pkgInfo.time[k];
-      console.log("removed version:", k, pkgDate.toISOString());
+      delete pkgInfo.versions[pkgVersion];
+      delete pkgInfo.time[pkgVersion];
+
+      for (let tagName in distTags) {
+        if (pkgVersion === distTags[tagName]) {
+          delete distTags[tagName];
+        }
+      }
     } else {
       if (!latestDate || pkgDate > latestDate) {
         latestDate = pkgDate;
-        latestVersion = k;
+        latestVersion = pkgVersion;
       }
     }
+  }
+  if (latestVersion) {
+    distTags.latest = latestVersion;
   }
 
   if (!params.version) {
