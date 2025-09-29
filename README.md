@@ -19,12 +19,12 @@ This protects developers from compromised releases: while packages are “on hol
 
 ## How to Use
 
-To use the TimeLock NPM Registry, you need to configure your package manager to point to the registry's URL. The URL format is `https://<your-worker-url>/lock/<minutes>/`, where `<minutes>` is your desired time lock.
+To use the TimeLock NPM Registry, you need to configure your package manager to point to the registry's URL. The URL format is `https://timelock-npm-registry.dev/lock/<minutes>/`, where `<minutes>` is your desired time lock.
 
 For example, to set a 24-hour (1440 minutes) time lock, the URL would be:
-`https://<your-worker-url>/lock/1440/`
+`https://timelock-npm-registry.dev/lock/1440/`
 
-Replace `<your-worker-url>` with the actual URL of your deployed Cloudflare Worker.
+Replace `timelock-npm-registry.dev` with the actual URL of your deployed Cloudflare Worker.
 
 ### Configuration
 
@@ -33,7 +33,7 @@ Replace `<your-worker-url>` with the actual URL of your deployed Cloudflare Work
 For both `npm` and `pnpm`, you can configure the registry on a per-project basis by creating a `.npmrc` file in your project's root directory with the following content:
 
 ```
-registry=https://<your-worker-url>/lock/1440/
+registry=https://timelock-npm-registry.dev/lock/1440/
 ```
 
 Alternatively, you can set the configuration globally:
@@ -41,13 +41,13 @@ Alternatively, you can set the configuration globally:
 **For npm:**
 
 ```bash
-npm config set registry https://<your-worker-url>/lock/1440/
+npm config set registry https://timelock-npm-registry.dev/lock/1440/
 ```
 
 **For pnpm:**
 
 ```bash
-pnpm config set registry https://<your-worker-url>/lock/1440/
+pnpm config set registry https://timelock-npm-registry.dev/lock/1440/
 ```
 
 To revert to the default npm registry, run:
@@ -59,13 +59,13 @@ For `bun`, configure the registry in your `bunfig.toml` file:
 
 ```toml
 [install]
-registry = "https://<your-worker-url>/lock/1440/"
+registry = "https://timelock-npm-registry.dev/lock/1440/"
 ```
 
 Alternatively, you can set the registry for a single command using an environment variable:
 
 ```bash
-BUN_INSTALL_REGISTRY="https://<your-worker-url>/lock/1440/" bun install
+BUN_INSTALL_REGISTRY="https://timelock-npm-registry.dev/lock/1440/" bun install
 ```
 
 ## Who benefits
