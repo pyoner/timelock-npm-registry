@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify",
+    "build": "markdown-to-html --source README.md --output public/index.html",
+    "deploy": "bun run build && wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
@@ -11,6 +12,7 @@
     "npm-registry-sdk": "^1.2.1"
   },
   "devDependencies": {
+    "markdown-to-html-cli": "^5.0.3",
     "wrangler": "^4.40.2"
   }
 }
